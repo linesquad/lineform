@@ -1,8 +1,11 @@
+"use client";
 import { Button } from "@/components/ui/button";
+import { UserButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import React from "react";
 
 const Header = () => {
+  const { user, isSignedIn } = useUser();
   return (
     <div className=" p-5 border shadow-sm">
       <div className=" flex items-center justify-between">
@@ -18,7 +21,14 @@ const Header = () => {
             LineDevLTD Form
           </h1>
         </div>
-        <Button>Create form</Button>
+        {isSignedIn ? (
+          <div className=" flex items-center gap-3">
+            <Button variant="outline">Dashboard</Button>
+            <UserButton />
+          </div>
+        ) : (
+          <Button>Create form</Button>
+        )}
       </div>
     </div>
   );
