@@ -18,7 +18,7 @@ const Header = () => {
             LineDevLTD Form
           </h1>
         </div>
-        <Button>Get Started</Button>
+        <Button>Create form</Button>
       </div>
     </div>
   );
