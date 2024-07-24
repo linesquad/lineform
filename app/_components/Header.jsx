@@ -1,7 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { UserButton, useUser } from "@clerk/nextjs";
+import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const Header = () => {
@@ -17,17 +18,21 @@ const Header = () => {
             height={50}
             className="rounded-full"
           />
-          <h1 className=" text-blue-700 font-bold tracking-wide">
+          <h1 className=" text-primary font-bold tracking-wide">
             LineDevLTD Form
           </h1>
         </div>
         {isSignedIn ? (
           <div className=" flex items-center gap-3">
-            <Button variant="outline">Dashboard</Button>
+            <Link href="/dashboard">
+              <Button variant="outline">Dashboard</Button>
+            </Link>
             <UserButton />
           </div>
         ) : (
-          <Button>Create form</Button>
+          <SignInButton>
+            <Button>Create form</Button>
+          </SignInButton>
         )}
       </div>
     </div>
