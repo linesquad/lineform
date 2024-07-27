@@ -15,9 +15,11 @@ import { AiChatSession } from "@/configs/AiModal";
 import { jsonForms } from "@/configs/schema";
 import { useUser } from "@clerk/nextjs";
 import moment from "moment/moment";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const CreateForm = () => {
+  const route = useRouter();
   const [openDialog, setOpenDialog] = useState(false);
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -42,7 +44,7 @@ const CreateForm = () => {
           createdAt: moment().format("DD/MM/yyyy"),
         })
         .returning({ id: jsonForms.id });
-      console.log(resp);
+      if (resp[0].id) route.push(`/edit-form/${resp[0].id}`);
       setLoading(false);
     }
     setLoading(false);
