@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import Spinner from "@/app/_components/Spinner";
+import FieldEdit from "./FieldEdit";
 
 const FormUi = ({ jsonForm }) => {
   console.log(jsonForm);
@@ -26,9 +27,9 @@ const FormUi = ({ jsonForm }) => {
       </h2>
 
       {jsonForm?.formFields?.map((field, i) => (
-        <div key={field.formName} className=" mb-3">
+        <div key={field.formName} className=" flex items-center gap-2">
           {field.fieldType == "select" ? (
-            <div className="my-3 flex flex-col items-start">
+            <div className="my-3 flex flex-col items-start w-full">
               <Select>
                 <label className=" text-xs text-gray-500 mb-1">
                   {field.formLabel}
@@ -46,7 +47,7 @@ const FormUi = ({ jsonForm }) => {
               </Select>
             </div>
           ) : field.fieldType === "radio" ? (
-            <div className="my-3 flex flex-col items-start">
+            <div className="my-3 flex flex-col items-start w-full">
               <label className=" text-xs text-gray-500 mb-1">
                 {field.formLabel}
               </label>
@@ -60,7 +61,7 @@ const FormUi = ({ jsonForm }) => {
               </RadioGroup>
             </div>
           ) : field.fieldType === "checkbox" ? (
-            <div className="my-3 flex flex-col items-start">
+            <div className="my-3 flex flex-col items-start w-full">
               <label className=" text-xs text-gray-500 mb-1">
                 {field.formLabel}
               </label>
@@ -79,7 +80,7 @@ const FormUi = ({ jsonForm }) => {
               )}
             </div>
           ) : (
-            <div className=" my-3 flex flex-col items-start">
+            <div className=" my-3 flex flex-col items-start w-full">
               <label className=" text-xs text-gray-500 mb-1">
                 {field.formLabel}
               </label>
@@ -90,6 +91,13 @@ const FormUi = ({ jsonForm }) => {
               />
             </div>
           )}
+
+          <div>
+            <FieldEdit
+              defaultValue={field}
+              onUpdate={(value) => console.log(value)}
+            />
+          </div>
         </div>
       ))}
     </div>
