@@ -75,7 +75,7 @@
     aspect-ratio: 1;
     border-radius: 50%;
     border: 8px solid theme("colors.primary.DEFAULT");
-    border-right-color: theme("colors.primary.DEFAULT");
+    border-right-color: theme("colors.secondary.DEFAULT");
     animation: rotate 1s infinite linear;
   }
 

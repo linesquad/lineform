@@ -26,7 +26,7 @@ const CreateForm = () => {
   const { user } = useUser();
 
   const PROMPT =
-    ", On the basis of description please give form in json format with form title, for subheading, form field, form name, placeholder name, and form label, field type, field required In json format";
+    ", On the basis of description please give form in json format with form title, for subheading, form field, form name, placeholder name, form label, field type, field required In json format";
 
   const onCreateForm = async () => {
     console.log(userInput);
