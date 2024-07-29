@@ -11,8 +11,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
 const FieldEdit = ({ defaultValue, onUpdate }) => {
-  const [label, setLabel] = useState("");
-  const [placeholder, setPlaceHolder] = useState("");
+  const [label, setLabel] = useState(defaultValue.formLabel);
+  const [placeholder, setPlaceHolder] = useState(defaultValue.placeholderName);
   return (
     <div className=" flex gap-2">
       <Popover>
@@ -39,7 +39,7 @@ const FieldEdit = ({ defaultValue, onUpdate }) => {
           </div>
           <Button
             size="small"
-            className=" mt-3"
+            className=" mt-3 p-2"
             onClick={() =>
               onUpdate({
                 formLabel: label,

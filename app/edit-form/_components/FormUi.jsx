@@ -14,9 +14,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Spinner from "@/app/_components/Spinner";
 import FieldEdit from "./FieldEdit";
 
-const FormUi = ({ jsonForm }) => {
-  console.log(jsonForm);
-
+const FormUi = ({ jsonForm, onFieldUpdate }) => {
   if (!jsonForm) return <Spinner />;
 
   return (
@@ -95,7 +93,7 @@ const FormUi = ({ jsonForm }) => {
           <div>
             <FieldEdit
               defaultValue={field}
-              onUpdate={(value) => console.log(value)}
+              onUpdate={(value) => onFieldUpdate(value, i)}
             />
           </div>
         </div>
