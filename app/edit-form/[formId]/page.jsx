@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import FormUi from "../_components/FormUi";
 import { toast } from "sonner";
+import Controller from "../_components/Controller";
 
 const EditForm = ({ params }) => {
   const { formId } = params;
@@ -17,6 +18,8 @@ const EditForm = ({ params }) => {
   const [jsonForm, setJsonForm] = useState(null);
   const [updateTrigger, setUpdateTrigger] = useState(false);
   const [record, setRecord] = useState([]);
+  const [selectedTheme, setSelectedTheme] = useState("light");
+
   const getFormData = async () => {
     const result = await db
       .select()
@@ -85,12 +88,15 @@ const EditForm = ({ params }) => {
         <ArrowLeft /> Back
       </span>
       <div className=" grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div className=" p-5 border rounded-lg shadow-md">Controller</div>
+        <div className=" p-5 border rounded-lg shadow-md">
+          <Controller />
+        </div>
         <div className=" md:col-span-2 border rounded-lg p-5 flex items-center justify-center text-center">
           <FormUi
             jsonForm={jsonForm}
             onFieldUpdate={onFieldUpdate}
             deleteField={(i) => deleteField(i)}
+            selectedTheme={selectedTheme}
           />
         </div>
       </div>

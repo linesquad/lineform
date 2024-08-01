@@ -14,11 +14,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Spinner from "@/app/_components/Spinner";
 import FieldEdit from "./FieldEdit";
 
-const FormUi = ({ jsonForm, onFieldUpdate, deleteField }) => {
+const FormUi = ({ jsonForm, onFieldUpdate, deleteField, selectedTheme }) => {
   if (!jsonForm) return <Spinner />;
 
   return (
-    <div className=" border p-5 md:w-[600px] rounded-lg">
+    <div
+      className=" border p-5 md:w-[600px] rounded-lg"
+      data-theme={selectedTheme}
+    >
       <h2 className=" font-bold text-center text-2xl">{jsonForm.formTitle}</h2>
       <h2 className=" text-sm text-gray-400 text-center">
         {jsonForm.formSubheading}
@@ -86,6 +89,7 @@ const FormUi = ({ jsonForm, onFieldUpdate, deleteField }) => {
                 type={field.fieldType}
                 placeholder={field.placeholderName}
                 name={field.fieldName}
+                className="bg-transparent"
               />
             </div>
           )}

@@ -10,7 +10,7 @@ const Header = () => {
   return (
     <div className=" p-5 border shadow-sm">
       <div className=" flex items-center justify-between">
-        <div className=" flex gap-3 items-center">
+        <Link href="/" className="flex gap-3 items-center">
           <Image
             src={"/khazi-logo.png"}
             alt="logo"
@@ -21,7 +21,7 @@ const Header = () => {
           <h1 className=" text-primary font-bold tracking-wide">
             LineDevLTD Form
           </h1>
-        </div>
+        </Link>
         {isSignedIn ? (
           <div className=" flex items-center gap-3">
             <Link href="/dashboard">

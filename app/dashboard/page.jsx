@@ -1,10 +1,9 @@
-import { Button } from "@/components/ui/button";
 import React from "react";
 import CreateForm from "./_components/CreateForm";
 
 const Dashboard = () => {
   return (
-    <div className=" p-10">
+    <div className=" p-10 h-screen">
       <h2 className=" font-bold text-3xl flex items-center justify-between">
         Dashboard
         <CreateForm />
