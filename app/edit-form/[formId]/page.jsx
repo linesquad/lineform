@@ -8,6 +8,7 @@ import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import FormUi from "../_components/FormUi";
+import { toast } from "sonner";
 
 const EditForm = ({ params }) => {
   const { formId } = params;
@@ -35,6 +36,16 @@ const EditForm = ({ params }) => {
     jsonForm.formFields[i].formLabel = value.formLabel;
     jsonForm.formFields[i].placeholderName = value.placeholderName;
     setUpdateTrigger(Date.now());
+    toast("Updated!");
+  };
+
+  const deleteField = async (iToRemove) => {
+    const result = jsonForm?.formFields?.filter((_, i) => i !== iToRemove);
+    console.log(result);
+
+    jsonForm.formFields = result;
+    setUpdateTrigger(Date.now());
+    toast("Deleted!");
   };
 
   useEffect(() => {
@@ -76,7 +87,11 @@ const EditForm = ({ params }) => {
       <div className=" grid grid-cols-1 md:grid-cols-3 gap-5">
         <div className=" p-5 border rounded-lg shadow-md">Controller</div>
         <div className=" md:col-span-2 border rounded-lg p-5 flex items-center justify-center text-center">
-          <FormUi jsonForm={jsonForm} onFieldUpdate={onFieldUpdate} />
+          <FormUi
+            jsonForm={jsonForm}
+            onFieldUpdate={onFieldUpdate}
+            deleteField={(i) => deleteField(i)}
+          />
         </div>
       </div>
     </div>
