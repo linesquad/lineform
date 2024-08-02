@@ -89,7 +89,7 @@ const EditForm = ({ params }) => {
       </span>
       <div className=" grid grid-cols-1 md:grid-cols-3 gap-5">
         <div className=" p-5 border rounded-lg shadow-md">
-          <Controller />
+          <Controller selectedTheme={(value) => setSelectedTheme(value)} />
         </div>
         <div className=" md:col-span-2 border rounded-lg p-5 flex items-center justify-center text-center">
           <FormUi
