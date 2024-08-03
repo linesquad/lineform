@@ -79,7 +79,7 @@ const Controller = ({ selectedTheme, selectedBg, selectStyle }) => {
         {Style.map((item, i) => (
           <div
             onClick={() => selectStyle(item.value)}
-            className=" w-[100px] h-[100px] bg-[black] text-white cursor-pointer rounded-full  flex items-center justify-center"
+            className=" w-[100px] h-[100px] bg-green-600 hover:bg-green-700 text-white cursor-pointer rounded-full  flex items-center justify-center"
             key={i}
           >
             <div className="">

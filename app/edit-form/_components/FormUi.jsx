@@ -20,6 +20,7 @@ const FormUi = ({
   deleteField,
   selectedTheme,
   selectedStyle,
+  edittable = true,
 }) => {
   if (!jsonForm) return <Spinner />;
 
@@ -101,13 +102,15 @@ const FormUi = ({
             </div>
           )}
 
-          <div>
-            <FieldEdit
-              defaultValue={field}
-              onUpdate={(value) => onFieldUpdate(value, i)}
-              deleteField={() => deleteField(i)}
-            />
-          </div>
+          {edittable && (
+            <div>
+              <FieldEdit
+                defaultValue={field}
+                onUpdate={(value) => onFieldUpdate(value, i)}
+                deleteField={() => deleteField(i)}
+              />
+            </div>
+          )}
         </div>
       ))}
       <button className=" btn btn-primary">Submit</button>
