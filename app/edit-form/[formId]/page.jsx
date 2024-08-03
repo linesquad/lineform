@@ -19,6 +19,8 @@ const EditForm = ({ params }) => {
   const [updateTrigger, setUpdateTrigger] = useState(false);
   const [record, setRecord] = useState([]);
   const [selectedTheme, setSelectedTheme] = useState("light");
+  const [selectedBg, setSelectedBg] = useState("light");
+  const [selectStyle, setSelectStyle] = useState("");
 
   const getFormData = async () => {
     const result = await db
@@ -33,6 +35,9 @@ const EditForm = ({ params }) => {
 
     setRecord(result[0]);
     setJsonForm(JSON.parse(result[0]?.jsonform));
+    setSelectedBg(result[0].background);
+    setSelectedTheme(result[0].theme);
+    setSelectStyle(result[0].style);
   };
 
   const onFieldUpdate = (value, i) => {
@@ -79,6 +84,54 @@ const EditForm = ({ params }) => {
     }
   }, [updateTrigger]);
 
+  const updateControllerFields = async (value, columnName) => {
+    const result = await db
+      .update(jsonForms)
+      .set({
+        [columnName]: value,
+      })
+      .where(
+        and(
+          eq(jsonForms.id, record.id),
+          eq(jsonForms.createdBy, user?.primaryEmailAddress.emailAddress)
+        )
+      );
+
+    toast("Updated!");
+  };
+
+  const updatebackground = async (value, columnName) => {
+    await db
+      .update(jsonForms)
+      .set({
+        [columnName]: value,
+      })
+      .where(
+        and(
+          eq(jsonForms.id, record.id),
+          eq(jsonForms.createdBy, user?.primaryEmailAddress.emailAddress)
+        )
+      );
+
+    toast("Updated!");
+  };
+
+  const updateStyle = async (value, columnName) => {
+    await db
+      .update(jsonForms)
+      .set({
+        [columnName]: value,
+      })
+      .where(
+        and(
+          eq(jsonForms.id, record.id),
+          eq(jsonForms.createdBy, user?.primaryEmailAddress.emailAddress)
+        )
+      );
+
+    toast("Updated!");
+  };
+
   return (
     <div className=" p-10">
       <span
@@ -89,14 +142,31 @@ const EditForm = ({ params }) => {
       </span>
       <div className=" grid grid-cols-1 md:grid-cols-3 gap-5">
         <div className=" p-5 border rounded-lg shadow-md">
-          <Controller selectedTheme={(value) => setSelectedTheme(value)} />
+          <Controller
+            selectedTheme={(value) => {
+              updateControllerFields(value, "theme");
+              setSelectedTheme(value);
+            }}
+            selectedBg={(value) => {
+              updatebackground(value, "background");
+              setSelectedBg(value);
+            }}
+            selectStyle={(value) => {
+              updateStyle(value, "style");
+              setSelectStyle(value);
+            }}
+          />
         </div>
-        <div className=" md:col-span-2 border rounded-lg p-5 flex items-center justify-center text-center">
+        <div
+          className=" md:col-span-2 border rounded-lg p-5 flex items-center justify-center text-center"
+          style={{ backgroundImage: selectedBg }}
+        >
           <FormUi
             jsonForm={jsonForm}
             onFieldUpdate={onFieldUpdate}
             deleteField={(i) => deleteField(i)}
             selectedTheme={selectedTheme}
+            selectedStyle={selectStyle}
           />
         </div>
       </div>

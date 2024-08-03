@@ -14,13 +14,20 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Spinner from "@/app/_components/Spinner";
 import FieldEdit from "./FieldEdit";
 
-const FormUi = ({ jsonForm, onFieldUpdate, deleteField, selectedTheme }) => {
+const FormUi = ({
+  jsonForm,
+  onFieldUpdate,
+  deleteField,
+  selectedTheme,
+  selectedStyle,
+}) => {
   if (!jsonForm) return <Spinner />;
 
   return (
     <div
       className=" border p-5 md:w-[600px] rounded-lg"
       data-theme={selectedTheme}
+      style={{ border: selectedStyle, boxShadow: selectedStyle }}
     >
       <h2 className=" font-bold text-center text-2xl">{jsonForm.formTitle}</h2>
       <h2 className=" text-sm text-gray-400 text-center">

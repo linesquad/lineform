@@ -1,5 +1,7 @@
 import { GradientBg } from "@/app/_data/GradientBg";
+import { Style } from "@/app/_data/Style";
 import { themes } from "@/app/_data/Themes";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -7,8 +9,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useState } from "react";
 
-const Controller = ({ selectedTheme }) => {
+const Controller = ({ selectedTheme, selectedBg, selectStyle }) => {
+  const [showMore, setShowMore] = useState(6);
   return (
     <div>
       <h2 className=" my-1">Themes</h2>
@@ -43,12 +47,45 @@ const Controller = ({ selectedTheme }) => {
 
       <h2 className=" mt-8 my-1">Background</h2>
       <div className=" grid grid-cols-3 gap-5">
-        {GradientBg.map((bg, i) => (
+        {GradientBg.map(
+          (bg, i) =>
+            i < showMore && (
+              <div
+                className=" w-full h-[70px] rounded-lg hover:border-black hover:border cursor-pointer"
+                key={i}
+                onClick={() => selectedBg(bg.gradient)}
+                style={{ backgroundImage: bg.gradient }}
+              ></div>
+            )
+        )}
+      </div>
+      <Button
+        onClick={() => {
+          if (showMore <= 6) {
+            setShowMore(20);
+          } else {
+            setShowMore(6);
+          }
+        }}
+        variant="ghost"
+        className=" w-full my-1"
+        size="sm"
+      >
+        {showMore > 6 ? "Show less" : "Show more"}
+      </Button>
+
+      <h2 className=" mt-8 my-1">Style</h2>
+      <div className=" grid grid-cols-3">
+        {Style.map((item, i) => (
           <div
-            className=" w-full h-[70px] rounded-lg hover:border-black hover:border cursor-pointer"
+            onClick={() => selectStyle(item.value)}
+            className=" w-[100px] h-[100px] bg-[black] text-white cursor-pointer rounded-full  flex items-center justify-center"
             key={i}
-            style={{ backgroundImage: bg.gradient }}
-          ></div>
+          >
+            <div className="">
+              <h2 className="">{item.name}</h2>
+            </div>
+          </div>
         ))}
       </div>
     </div>
