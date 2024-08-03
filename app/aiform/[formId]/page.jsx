@@ -29,8 +29,6 @@ const LiveAiForm = ({ params }) => {
 
   if (!formId && !recod) return <Spinner />;
 
-  if (!jsonForm) return <h1>Error accourd</h1>;
-
   return (
     <div
       className={`p-10 flex justify-center items-center`}

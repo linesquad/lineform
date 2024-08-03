@@ -15,9 +15,10 @@ import Spinner from "@/app/_components/Spinner";
 import FieldEdit from "./FieldEdit";
 import { useRef, useState } from "react";
 import { db } from "@/configs";
-import { userResponses } from "@/configs/schema";
+import { jsonForms, userResponses } from "@/configs/schema";
 import moment from "moment";
 import { toast } from "sonner";
+import { eq } from "drizzle-orm";
 
 const FormUi = ({
   jsonForm,
@@ -26,6 +27,7 @@ const FormUi = ({
   selectedTheme,
   selectedStyle,
   edittable = true,
+  formId = 25,
 }) => {
   const [formData, setFormData] = useState();
   let formRef = useRef();
@@ -48,9 +50,20 @@ const FormUi = ({
   const onFormSubmit = async (e) => {
     e.preventDefault();
 
+    const formExists = await db
+      .select()
+      .from(jsonForms)
+      .where(eq(jsonForms.id, formId));
+
+    if (formExists.length === 0) {
+      toast("Invalid form reference.");
+      return;
+    }
+
     const result = await db.insert(userResponses).values({
       jsonResponse: formData,
       createdAt: moment().format("DD/MM/yyyy"),
+      formRef: +formId,
     });
 
     if (result) {
@@ -77,6 +90,9 @@ const FormUi = ({
   };
 
   if (!jsonForm) return <Spinner />;
+  console.log(formId);
+
+  if (!jsonForm) return <h1>Error accourd</h1>;
 
   return (
     <form

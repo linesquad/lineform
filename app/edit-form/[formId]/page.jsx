@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import Controller from "../_components/Controller";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Spinner from "@/app/_components/Spinner";
 
 const EditForm = ({ params }) => {
   const { formId } = params;
@@ -74,9 +75,6 @@ const EditForm = ({ params }) => {
           eq(jsonForms.createdBy, user?.primaryEmailAddress.emailAddress)
         )
       );
-
-    console.log(result);
-    console.log(JSON.stringify(jsonForm));
   };
 
   useEffect(() => {
@@ -133,7 +131,6 @@ const EditForm = ({ params }) => {
 
     toast("Updated!");
   };
-
   return (
     <div className=" p-10 bg-white">
       <div className=" flex justify-between items-center">
@@ -176,13 +173,16 @@ const EditForm = ({ params }) => {
           className=" md:col-span-2 border rounded-lg p-5 flex items-center justify-center text-center"
           style={{ backgroundImage: selectedBg }}
         >
-          <FormUi
-            jsonForm={jsonForm}
-            onFieldUpdate={onFieldUpdate}
-            deleteField={(i) => deleteField(i)}
-            selectedTheme={selectedTheme}
-            selectedStyle={selectStyle}
-          />
+          {formId && (
+            <FormUi
+              jsonForm={jsonForm}
+              onFieldUpdate={onFieldUpdate}
+              deleteField={(i) => deleteField(i)}
+              selectedTheme={selectedTheme}
+              selectedStyle={selectStyle}
+              formId={formId}
+            />
+          )}
         </div>
       </div>
     </div>
