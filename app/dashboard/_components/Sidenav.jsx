@@ -2,12 +2,20 @@
 
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { db } from "@/configs";
+import { jsonForms } from "@/configs/schema";
+import { useUser } from "@clerk/nextjs";
+import { desc, eq } from "drizzle-orm";
 import { ChartLine, LibraryBig, MessageSquareMore, Shield } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 const Sidenav = () => {
+  const { user } = useUser();
+  const [formList, setFormList] = useState([]);
+  const [percentige, setPercentige] = useState(0);
+
   const menuList = [
     {
       id: 1,
@@ -37,9 +45,21 @@ const Sidenav = () => {
 
   const path = usePathname();
 
-  // useEffect(() => {
-  //   console.log(path);
-  // }, [path]);
+  useEffect(() => {
+    user && GetFormList();
+  }, [user]);
+
+  const GetFormList = async () => {
+    const result = await db
+      .select()
+      .from(jsonForms)
+      .where(eq(jsonForms.createdBy, user?.primaryEmailAddress.emailAddress))
+      .orderBy(desc(jsonForms.id));
+
+    setFormList(result);
+    const perc = (result.length / 3) * 100;
+    setPercentige(perc);
+  };
 
   return (
     <div className=" md:h-screen shadow-md border">
@@ -60,9 +80,10 @@ const Sidenav = () => {
       <div className=" block md:fixed bottom-10 p-5 w-64">
         <Button className="w-full">Create form</Button>
         <div className=" mt-5">
-          <Progress value={33} />
+          <Progress value={percentige} />
           <h2 className=" text-sm mt-2 text-gray-600">
-            <strong>2</strong> out of <strong>3</strong> File created
+            <strong>{formList.length}</strong> out of <strong>3</strong> File
+            created
           </h2>
           <h2 className=" text-xs mt-3 text-gray-600">
             Upgrade your plan for unlimited form
