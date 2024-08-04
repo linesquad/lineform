@@ -42,7 +42,7 @@ const Sidenav = () => {
   // }, [path]);
 
   return (
-    <div className=" h-screen shadow-md border">
+    <div className=" md:h-screen shadow-md border">
       <div className=" p-5">
         {menuList.map((menu, i) => (
           <Link key={i} href={menu.path}>
@@ -57,7 +57,7 @@ const Sidenav = () => {
           </Link>
         ))}
       </div>
-      <div className=" fixed bottom-10 p-5 w-64">
+      <div className=" block md:fixed bottom-10 p-5 w-64">
         <Button className="w-full">Create form</Button>
         <div className=" mt-5">
           <Progress value={33} />

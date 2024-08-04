@@ -5,11 +5,11 @@ import Sidenav from "./_components/Sidenav";
 const DashboardLayout = ({ children }) => {
   return (
     <SignedIn>
-      <div>
-        <div className=" md:w-64 fixed">
+      <div className=" grid grid-cols-1">
+        <div className=" md:w-64 block md:fixed">
           <Sidenav />
         </div>
-        <div className=" md:ml-64">{children}</div>
+        <div className=" md:ml-64 bg-white">{children}</div>
       </div>
     </SignedIn>
   );

@@ -24,7 +24,7 @@ const FormList = () => {
     setFormList(result);
   };
 
-  if (!formList.length) return <h1>Form not found</h1>;
+  if (!formList.length) return <Spinner />;
   console.log(formList);
   return (
     <div className=" mt-5 grid grid-cols-2 md:grid-cols-3 gap-5">
