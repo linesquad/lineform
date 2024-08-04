@@ -13,6 +13,7 @@ import Controller from "../_components/Controller";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Spinner from "@/app/_components/Spinner";
+import { RWebShare } from "react-web-share";
 
 const EditForm = ({ params }) => {
   const { formId } = params;
@@ -147,9 +148,18 @@ const EditForm = ({ params }) => {
               <SquareArrowOutUpRight className=" h-5 w-5" /> Live Preview
             </Button>
           </Link>
-          <Button className=" flex gap-2 items-center bg-green-600 hover:bg-green-700">
-            <Share2 className=" h-5 w-5" /> Share
-          </Button>
+          <RWebShare
+            data={{
+              text: record.formSubheading + " build your form with tr builder",
+              url: process.env.NEXT_PUBLIC_BASE_URL + `aiform/${record.id}`,
+              title: record.formTitle,
+            }}
+            onClick={() => console.log("shared successfully!")}
+          >
+            <Button className=" flex gap-2 items-center bg-green-600 hover:bg-green-700">
+              <Share2 className=" h-5 w-5" /> Share
+            </Button>
+          </RWebShare>
         </div>
       </div>
       <div className=" grid grid-cols-1 md:grid-cols-3 gap-5">

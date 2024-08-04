@@ -27,7 +27,7 @@ const FormUi = ({
   selectedTheme,
   selectedStyle,
   edittable = true,
-  formId = 25,
+  formId = 0,
 }) => {
   const [formData, setFormData] = useState();
   let formRef = useRef();
@@ -90,7 +90,6 @@ const FormUi = ({
   };
 
   if (!jsonForm) return <Spinner />;
-  console.log(formId);
 
   if (!jsonForm) return <h1>Error accourd</h1>;
 
@@ -108,14 +107,14 @@ const FormUi = ({
       </h2>
 
       {jsonForm?.formFields?.map((field, i) => (
-        <div key={field.formName} className=" flex items-center gap-2">
+        <div key={i} className=" flex items-center gap-2">
           {field.fieldType == "select" ? (
             <div className="my-3 flex flex-col items-start w-full">
               <Select
                 name={field.formName}
                 required={field.fieldRequired}
                 onValueChange={(value) =>
-                  handleSelectChange(field.formName, value)
+                  handleSelectChange(field.fieldName, value)
                 }
               >
                 <label className=" text-xs text-gray-500 mb-1">
@@ -159,13 +158,13 @@ const FormUi = ({
                 {field.formLabel}
               </label>
               {field.options ? (
-                field.options?.map((option) => (
-                  <div key={option.label} className=" flex gap-2">
+                field.options?.map((option, i) => (
+                  <div key={i} className=" flex gap-2">
                     <Checkbox
                       name={field.formName}
                       onCheckedChange={(value) => {
                         handleCheckboxChange(
-                          field.formLabel,
+                          field.formName,
                           option.label,
                           value
                         );
@@ -189,9 +188,9 @@ const FormUi = ({
               <Input
                 type={field.fieldType}
                 placeholder={field.placeholderName}
-                name={field.formName}
+                name={field.formName ? field.formName : field.fieldName}
                 className="bg-transparent"
-                onChange={(e) => handleInputChange(e)}
+                onChange={handleInputChange}
                 required={field.fieldRequired}
               />
             </div>

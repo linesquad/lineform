@@ -41,6 +41,7 @@ const LiveAiForm = ({ params }) => {
         selectedStyle={recod.style}
         selectedTheme={recod.theme}
         edittable={false}
+        formId={formId}
       />
       <Link
         href={process.env.NEXT_PUBLIC_BASE_URL}
