@@ -5,16 +5,24 @@ import { db } from "@/configs";
 import { jsonForms } from "@/configs/schema";
 import { useUser } from "@clerk/nextjs";
 import { desc, eq } from "drizzle-orm";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import FormListItem from "./FormListItem";
 
 const FormList = () => {
   const [formList, setFormList] = useState([]);
+  const [loading, setLoading] = useState(true); // Add loading state
   const { user } = useUser();
+
   useEffect(() => {
-    user && GetFormList();
+    if (user) {
+      GetFormList();
+    } else {
+      setLoading(false);
+    }
   }, [user]);
+
   const GetFormList = async () => {
+    setLoading(true);
     const result = await db
       .select()
       .from(jsonForms)
@@ -22,12 +30,15 @@ const FormList = () => {
       .orderBy(desc(jsonForms.id));
 
     setFormList(result);
+    setLoading(false);
   };
 
-  if (!formList.length) return <Spinner />;
-  console.log(formList);
+  if (loading) return <Spinner />;
+
+  if (!formList.length) return <div>Currently we don't have forms</div>; 
+
   return (
-    <div className=" mt-5 grid grid-cols-2 md:grid-cols-3 gap-5">
+    <div className="mt-5 grid grid-cols-2 md:grid-cols-3 gap-5">
       {formList.map((form, i) => (
         <div key={form.id}>
           <FormListItem

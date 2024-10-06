@@ -13,7 +13,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import Spinner from "@/app/_components/Spinner";
 import FieldEdit from "./FieldEdit";
-import { useRef, useState } from "react";
+import TitleEdit from "./TitleEdit"; 
+import { useEffect, useRef, useState } from "react";
 import { db } from "@/configs";
 import { jsonForms, userResponses } from "@/configs/schema";
 import moment from "moment";
@@ -26,11 +27,30 @@ const FormUi = ({
   deleteField,
   selectedTheme,
   selectedStyle,
+  onTitleUpdate,
   edittable = true,
   formId = 0,
 }) => {
   const [formData, setFormData] = useState();
-  let formRef = useRef();
+  const formRef = useRef();
+
+  const initialMainTitle = jsonForm?.formTitle || "Default Main Title"; 
+  const initialSecondaryTitle = jsonForm?.formSubheading || "Default Secondary Title"; 
+
+  const [titles, setTitles] = useState({
+    formMainTitle: initialMainTitle,
+    formSecondaryTitle: initialSecondaryTitle,
+  });
+
+  // this updtestitles whenever jsonForm changes
+  useEffect(() => {
+    if (jsonForm) {
+      setTitles({
+        formMainTitle: jsonForm.formTitle || "Default Main Title", 
+        formSecondaryTitle: jsonForm.formSubheading || "Default Secondary Title", 
+      });
+    }
+  }, [jsonForm]);
 
   const handleSelectChange = (name, value) => {
     setFormData({
@@ -64,10 +84,12 @@ const FormUi = ({
       jsonResponse: formData,
       createdAt: moment().format("DD/MM/yyyy"),
       formRef: +formId,
+      formMainTitle: titles.formMainTitle,        
+      formSecondaryTitle: titles.formSecondaryTitle 
     });
 
     if (result) {
-      formRef.reset();
+      formRef.current.reset(); 
       toast("Thank you for your response.");
     } else {
       toast("Error while saving your information.");
@@ -75,7 +97,7 @@ const FormUi = ({
   };
 
   const handleCheckboxChange = (fieldName, itemName, value) => {
-    const list = formData[fieldName] ? formData?.[fieldName] : [];
+    const list = formData[fieldName] ? formData[fieldName] : [];
 
     if (value) {
       list.push({
@@ -89,26 +111,37 @@ const FormUi = ({
     }
   };
 
-  if (!jsonForm) return <Spinner />;
+  const updateTitles = (updatedTitles) => {
+    setTitles(updatedTitles);
+    onTitleUpdate(updatedTitles.formMainTitle, "main");
+    onTitleUpdate(updatedTitles.formSecondaryTitle, "secondary");
+  };
 
-  if (!jsonForm) return <h1>Error accourd</h1>;
+  if (!jsonForm) return <Spinner />;
 
   return (
     <form
-      ref={(e) => (formRef = e)}
+      ref={formRef}
       onSubmit={onFormSubmit}
-      className=" border p-5 md:w-[600px] rounded-lg"
+      className="border p-5 md:w-[600px] rounded-lg"
       data-theme={selectedTheme}
       style={{ border: selectedStyle, boxShadow: selectedStyle }}
     >
-      <h2 className=" font-bold text-center text-2xl">{jsonForm.formTitle}</h2>
-      <h2 className=" text-sm text-gray-400 text-center">
-        {jsonForm.formSubheading}
-      </h2>
-
+      <div className="text-center">
+        <div className="flex items-center gap-2 justify-center">
+          <h2 className="font-bold text-2xl">{titles.formMainTitle}</h2>
+          {edittable && (
+            <TitleEdit
+              defaultValue={titles}
+              onUpdate={updateTitles}
+            />
+          )}
+        </div>
+      </div>
+      <h2 className="text-sm text-gray-400">{titles.formSecondaryTitle}</h2>
       {jsonForm?.formFields?.map((field, i) => (
-        <div key={i} className=" flex items-center gap-2">
-          {field.fieldType == "select" ? (
+        <div key={i} className="flex items-center gap-2">
+          {field.fieldType === "select" ? (
             <div className="my-3 flex flex-col items-start w-full">
               <Select
                 name={field.formName}
@@ -117,10 +150,10 @@ const FormUi = ({
                   handleSelectChange(field.fieldName, value)
                 }
               >
-                <label className=" text-xs text-gray-500 mb-1">
+                <label className="text-xs text-gray-500 mb-1">
                   {field.formLabel}
                 </label>
-                <SelectTrigger className="">
+                <SelectTrigger>
                   <SelectValue placeholder={field.placeholderName} />
                 </SelectTrigger>
                 <SelectContent>
@@ -134,7 +167,7 @@ const FormUi = ({
             </div>
           ) : field.fieldType === "radio" ? (
             <div className="my-3 flex flex-col items-start w-full">
-              <label className=" text-xs text-gray-500 mb-1">
+              <label className="text-xs text-gray-500 mb-1">
                 {field.formLabel}
               </label>
               <RadioGroup required={field.fieldRequired} name={field.formName}>
@@ -154,12 +187,12 @@ const FormUi = ({
             </div>
           ) : field.fieldType === "checkbox" ? (
             <div className="my-3 flex flex-col items-start w-full">
-              <label className=" text-xs text-gray-500 mb-1">
+              <label className="text-xs text-gray-500 mb-1">
                 {field.formLabel}
               </label>
               {field.options ? (
-                field.options?.map((option, i) => (
-                  <div key={i} className=" flex gap-2">
+                field.options.map((option, i) => (
+                  <div key={i} className="flex gap-2">
                     <Checkbox
                       name={field.formName}
                       onCheckedChange={(value) => {
@@ -174,21 +207,21 @@ const FormUi = ({
                   </div>
                 ))
               ) : (
-                <div className=" flex items-center gap-2">
+                <div className="flex items-center gap-2">
                   <Checkbox required={field.fieldRequired} />
                   <h2>{field.formLabel}</h2>
                 </div>
               )}
             </div>
           ) : (
-            <div className=" my-3 flex flex-col items-start w-full">
-              <label className=" text-xs text-gray-500 mb-1">
+            <div className="my-3 flex flex-col items-start w-full">
+              <label className="text-xs text-gray-500 mb-1">
                 {field.formLabel}
               </label>
               <Input
                 type={field.fieldType}
                 placeholder={field.placeholderName}
-                name={field.formName ? field.formName : field.fieldName}
+                name={field.formName || field.fieldName}
                 className="bg-transparent"
                 onChange={handleInputChange}
                 required={field.fieldRequired}
@@ -207,7 +240,7 @@ const FormUi = ({
           )}
         </div>
       ))}
-      <button type="submit" className=" btn btn-primary">
+      <button type="submit" className="btn btn-primary">
         Submit
       </button>
     </form>

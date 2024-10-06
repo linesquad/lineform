@@ -25,7 +25,10 @@ const EditForm = ({ params }) => {
   const [selectedTheme, setSelectedTheme] = useState("light");
   const [selectedBg, setSelectedBg] = useState("light");
   const [selectStyle, setSelectStyle] = useState("");
-
+  const [titles, setTitles] = useState({
+    formMainTitle: "",
+    formSecondaryTitle: "",
+  });
   const getFormData = async () => {
     const result = await db
       .select()
@@ -39,16 +42,64 @@ const EditForm = ({ params }) => {
 
     setRecord(result[0]);
     setJsonForm(JSON.parse(result[0]?.jsonform));
+    setTitles({
+      formMainTitle: result[0].formTitle,
+      formSecondaryTitle: result[0].formSubheading,
+    });
     setSelectedBg(result[0].background);
     setSelectedTheme(result[0].theme);
     setSelectStyle(result[0].style);
   };
+// titles updating here
+  const updateTitlesInDb = async (mainTitle, secondaryTitle) => {
+    if (!record?.id || !user?.primaryEmailAddress?.emailAddress) {
+      toast("Invalid record or user.");
+      return;
+    }
+  
+    try {
+      const result = await db
+        .update(jsonForms)
+        .set({
+          formTitle: mainTitle,
+          formSubheading: secondaryTitle,
+        })
+        .where(
+          and(
+            eq(jsonForms.id, record.id),
+            eq(jsonForms.createdBy, user.primaryEmailAddress.emailAddress)
+          )
+        );
+  
+      console.log("Database update result:", result); 
+      toast("Titles updated!");
+    } catch (error) {
+      console.error("Error updating titles:", error); 
+      toast("Failed to update titles.");
+    }
+  };
+  
 
   const onFieldUpdate = (value, i) => {
     jsonForm.formFields[i].formLabel = value.formLabel;
     jsonForm.formFields[i].placeholderName = value.placeholderName;
     setUpdateTrigger(Date.now());
     toast("Updated!");
+  };
+
+  const onTitleUpdate = (value, titleType) => {
+    const updatedTitles = {
+      formMainTitle: titleType === "main" ? value : titles.formMainTitle,
+      formSecondaryTitle:
+        titleType === "secondary" ? value : titles.formSecondaryTitle,
+    };
+
+    setTitles(updatedTitles);
+    updateTitlesInDb(
+      updatedTitles.formMainTitle,
+      updatedTitles.formSecondaryTitle
+    );
+    toast("Title updated!");
   };
 
   const deleteField = async (iToRemove) => {
@@ -191,6 +242,7 @@ const EditForm = ({ params }) => {
               selectedTheme={selectedTheme}
               selectedStyle={selectStyle}
               formId={formId}
+              onTitleUpdate={onTitleUpdate}
             />
           )}
         </div>
